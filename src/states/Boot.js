@@ -5,8 +5,9 @@ class Boot extends Phaser.State {
 	preload() {
 		this.game.fontsize = 32;
 		this.game.load.image("loaderFull", "assets/interface/loader_full.png");
-        this.game.load.image("loaderEmpty", "assets/interface/loader_empty.png");
-        this.game.load.spritesheet("loading", "assets/sprites/loading.png", 48, 48);
+    this.game.load.image("loaderEmpty", "assets/interface/loader_empty.png");
+    this.game.load.spritesheet("loading", "assets/sprites/loading.png", 48, 48);
+    this.game.load.spritesheet("button", "assets/sprites/button_sprite_sheet.png", 191, 65);
 	}
 
 	create() {
