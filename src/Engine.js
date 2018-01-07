@@ -8,19 +8,19 @@ import Credits from 'states/menu/Credits';
 
 class Engine extends Phaser.Game {
 
-	constructor() {
+  constructor() {
 
-		super(window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio, Phaser.AUTO);
+    super(window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio, Phaser.AUTO);
 
-		this.state.add('Boot', Boot, false);
-		this.state.add('Preload', Preload, false);
-		this.state.add('Game', Game, false);
+    this.state.add('Boot', Boot, false);
+    this.state.add('Preload', Preload, false);
+    this.state.add('Game', Game, false);
     this.state.add('MainMenu', MainMenu, false);
     this.state.add('Options', Options, false);
-		this.state.add('Credits', Credits, false);
+    this.state.add('Credits', Credits, false);
 
-		this.state.start('Boot');
-	}
+    this.state.start('Boot');
+  }
 
 }
 
