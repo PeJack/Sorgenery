@@ -18,10 +18,13 @@ class Preload extends Phaser.State {
 		this.loaderEmpty.anchor.setTo(0.5, 0);
 
 		this.game.load.setPreloadSprite(this.preloadBar);
+
+		this.game.load.spritesheet("48bitSprites", "assets/sprites/48bitSprites.png", 48, 48)
 	}
 
 	create() {
 		// this.game.state.start("MainMenu");
+		this.game.state.start("Game");
 	}
 }
 

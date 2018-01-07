@@ -31,6 +31,11 @@ class ButtonHandler {
 		}
 	}
 	
+	timeOut() {
+        this.lastTimeOut = this.game.time.now + 200;
+        this.reset();
+    }
+
 	reset() {
 		for (let button in this.buttons) {
 			this.buttons[button] = false;
