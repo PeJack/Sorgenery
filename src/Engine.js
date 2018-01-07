@@ -15,8 +15,8 @@ class Engine extends Phaser.Game {
 		this.state.add('Boot', Boot, false);
 		this.state.add('Preload', Preload, false);
 		this.state.add('Game', Game, false);
-    	this.state.add('MainMenu', MainMenu, false);
-    	this.state.add('Options', Options, false);
+    this.state.add('MainMenu', MainMenu, false);
+    this.state.add('Options', Options, false);
 		this.state.add('Credits', Credits, false);
 
 		this.state.start('Boot');
