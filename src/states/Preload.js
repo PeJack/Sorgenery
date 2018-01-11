@@ -27,6 +27,11 @@ class Preload extends Phaser.State {
 
     this.game.load.spritesheet("48bitSprites", "assets/sprites/48bitSprites.png", 48, 48)
 
+    this.game.load.tilemap('lvl1', 'assets/sprites/lvl1.json', null, Phaser.Tilemap.TILED_JSON);
+    this.game.load.image('tiles', 'assets/sprites/terrain_atlas.png');
+    this.game.load.image('carrot', 'assets/sprites/carrot.png');
+    this.game.load.image('eggplant', 'assets/sprites/eggplant.png');
+
     this.loadImages();
   }
 
