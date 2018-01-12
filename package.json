@@ -20,6 +20,8 @@
     "yargs": "^3.16.1"
   },
   "dependencies": {
-    "phaser": "^2.4.1"
+    "phaser": "^2.4.1",
+    "phaser-plugin-isometric": "github:lewster32/phaser-plugin-isometric",
+    "phaser-tiled": "github:englercj/phaser-tiled"  
   }
 }

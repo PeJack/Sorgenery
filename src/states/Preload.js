@@ -3,6 +3,7 @@ class Preload extends Phaser.State {
     this.game.load.image('menu4', 'assets/interface/menu4.jpg');
     this.game.load.image('menu5', 'assets/interface/menu5.jpg');
     this.game.load.image('menu6', 'assets/interface/menu6.jpg');
+    this.game.load.image('cube', 'assets/sprites/cube.png');
   }
 
   preload() {
@@ -25,14 +26,19 @@ class Preload extends Phaser.State {
 
     this.game.load.setPreloadSprite(this.preloadBar);
 
-    this.game.load.spritesheet("48bitSprites", "assets/sprites/48bitSprites.png", 48, 48)
+    this.game.load.atlasJSONHash('tileset', "assets/sprites/tileset.png", "assets/sprites/tileset.json", null);
+    this.game.load.atlasJSONHash('exterior', "assets/sprites/exterior.png", "assets/sprites/exterior.json", null);
 
+    this.game.load.spritesheet("48bitSprites", "assets/sprites/48bitSprites.png", 48, 48);
+    this.game.load.atlasJSONHash('warlock', "assets/sprites/warlock.png", "assets/sprites/warlock.json", null);
+    this.game.load.atlasJSONHash('f_doram', "assets/sprites/heads/f_doram.png", "assets/sprites/heads/f_doram.json", null);
+    
     this.loadImages();
   }
 
   create() {
-    this.game.state.start("MainMenu");
-    // this.game.state.start("Game")
+    // this.game.state.start("MainMenu");
+    this.game.state.start("Game")
   }
 }
 

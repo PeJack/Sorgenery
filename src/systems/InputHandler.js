@@ -62,55 +62,83 @@ class InputHandler {
   }
 
   handleInputButton() {
+    let path = [];
+
     if (this.buttonHandler.update() && this.action != "waiting" && this.active) {
       if (this.buttons.up) {
-        this.startWalk(
-          [{
-            y: this.game.player.getPosition().y - 1
-          }],
-          "up"
-        )
+        path.push({
+          y: this.game.player.getPosition().y - 1,
+          isoY: this.game.player.getPosition().isoY - 1
+        });
+
+        // this.startWalk(
+        //   [{
+        //     y: this.game.player.getPosition().y - 1
+        //   }]
+        // )
       }
       if (this.buttons.down) {  
-        this.startWalk(
-          [{
-            y: this.game.player.getPosition().y + 1
-          }],
-          "down"
-        )
+        path.push({
+          y: this.game.player.getPosition().y + 1,
+          isoY: this.game.player.getPosition().isoY + 1          
+        });
+
+        // this.startWalk(
+        //   [{
+        //     y: this.game.player.getPosition().y + 1
+        //   }]
+        // )
       }
       if (this.buttons.left) {
-        this.startWalk(
-          [{
-            x: this.game.player.getPosition().x - 1
-          }],
-          "left"
-        )
+        path.push({
+          x: this.game.player.getPosition().x - 1,
+          isoX: this.game.player.getPosition().isoX - 1          
+        });
+
+        // this.startWalk(
+        //   [{
+        //     x: this.game.player.getPosition().x - 1
+        //   }]
+        // )
       }
       if (this.buttons.right) {
-        this.startWalk(
-          [{
-            x: this.game.player.getPosition().x + 1
-          }],
-          "right"
-        )
+        path.push({
+          x: this.game.player.getPosition().x + 1,
+          isoX: this.game.player.getPosition().isoX + 1            
+        });    
+
+        // this.startWalk(
+        //   [{
+        //     x: this.game.player.getPosition().x + 1
+        //   }]
+        // )
+      }
+      
+      if (path.length) {
+        this.startWalk(path);
+      } else {
+        this.game.player.startIdle();
       }
 
       this.buttonHandler.timeOut();
     }
   }
 
-  startWalk(path, direction) {
+  startWalk(path) {
     this.action = "waiting";
     this.game.player.path = path;
 
-    let currentPath = this.game.player.path.pop();
+    // let currentPath = this.game.player.path.pop();
 
-    if (currentPath) {
-      this.game.player.walkToTile(currentPath, direction, function() {
-        this.action = "none";
-      }, this)
-    }
+    // if (currentPath) {
+    //   this.game.player.walkToTile(currentPath, function() {
+    //     this.action = "none";
+    //   }, this)
+    // }
+
+    this.game.player.walkToTile(path, function() {
+      this.action = "none";
+    }, this)
   }
 
   update() {

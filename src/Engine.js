@@ -9,8 +9,7 @@ import Credits from 'states/menu/Credits';
 class Engine extends Phaser.Game {
 
   constructor() {
-
-    super(window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio, Phaser.AUTO);
+    super(window.innerWidth, window.innerHeight, Phaser.AUTO, 'Sorgenery', null, true, false);
 
     this.state.add('Boot', Boot, false);
     this.state.add('Preload', Preload, false);
