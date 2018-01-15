@@ -31,6 +31,8 @@ class Preload extends Phaser.State {
     this.game.load.image('tiles', 'assets/sprites/terrain_atlas.png');
     this.game.load.image('carrot', 'assets/sprites/carrot.png');
     this.game.load.image('eggplant', 'assets/sprites/eggplant.png');
+    this.game.load.image('bullet', 'assets/sprites/bullet.png');
+
 
     this.loadImages();
   }

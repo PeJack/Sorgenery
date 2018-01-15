@@ -10,48 +10,47 @@ class Game extends Phaser.State {
   }
 
   create() {
-    this.layers.background = this.game.add.group(this.game.world, "background");
-    this.layers.objects = this.game.add.group(this.game.world, "objects");
-    this.layers.enemies = this.game.add.group(this.game.world, "enemies");
-    this.layers.chars = this.game.add.group(this.game.world, "chars");
-    this.layers.spells = this.game.add.group(this.game.world, "spells");
-    this.layers.effects = this.game.add.group(this.game.world, "effects");
-    this.layers.enemyHealth = this.game.add.group(this.game.world, "enemyHealth");
-    this.layers.spellbook = this.game.add.group();
-    this.layers.menu = this.game.add.group();
-    this.layers.hud = this.game.add.group();
-
-    this.layers.spellbook.fixedToCamera = true;
-    this.layers.menu.fixedToCamera = true;
-    this.layers.hud.fixedToCamera = true;
-
     this.map = this.game.add.tilemap('lvl1');
     this.map.addTilesetImage('tiles', 'tiles');
 
-    this.backgroundlayer = this.map.createLayer('backgroundLayer');
-    this.blockedLayer = this.map.createLayer('blockedLayer');
-
-    //collision on blockedLayer
-    this.map.setCollisionBetween(1, 100000, true, 'blockedLayer');
+    this.layers.background      = this.map.createLayer('backgroundLayer');
+    this.layers.mapBlocks       = this.map.createLayer('blockedLayer');
+    this.layers.collectObjects  = this.game.add.group(this.game.world, "collectObjects");
+    this.layers.spells          = this.game.add.group(this.game.world, "spells");
+    this.layers.chars           = this.game.add.group(this.game.world, "chars");
+    this.layers.bolts           = this.game.add.group();
+    
+    this.layers.bolts.enableBody = true;
+    this.layers.bolts.physicsBodyType = Phaser.Physics.ARCADE;
+    this.layers.bolts.setAll('anchor.x', 0.5);
+    this.layers.bolts.setAll('anchor.y', 0.5);
+    this.line = new Phaser.Line(300, 100, 500, 500);
+    this.line1;
+    
+    // Коллизия на объекты с ID..
+    // [0, 208, 240, 272, 273, 274, 292, 296, 297, 304, 305, 306, 324, 328, 329, 336, 337, 338, 356, 357, 358, 359, 360, 363, 364, 388, 389, 390, 391, 392, 395, 396, 420, 421, 422, 423, 424, 427, 428, 505, 506, 507, 537, 538, 539, 569, 570, 571, 634, 635, 636, 667, 694, 695, 697, 699, 700, 701, 702, 703, 731, 732, 733, 734, 735, 767, 768, 799, 800, 831, 832, 863, 864, 895, 924, 926, 927, 928, 958, 959, 960, 987, 990, 991, 992, 1019, 1022, 1023]
+    this.map.setCollisionBetween(208, 1024, true, 'blockedLayer');
  
-    //resizes the game world to match the layer dimensions
-    this.backgroundlayer.resizeWorld();
-    // layer.resizeWorld();
-    this.backgroundlayer.wrap = true;
+    // Ресайз мира.
+    this.layers.background.resizeWorld();
+    this.layers.background.wrap = true;
 
     this.createItems();
     
-    //we know there is just one result
-    this.player = this.game.add.sprite(0, 0, '48bitSprites');
+    // Игрок.
+    this.player = this.layers.chars.create(0, 0, "48bitSprites");
     this.game.physics.arcade.enable(this.player);
-    
-    //the camera will follow the player in the world
     this.game.camera.follow(this.player);
+
+    // Счет.
+    this.score = 0;
+    this.scoreText = this.game.add.text(16, 16, 'Score: 0', { fontSize: '32px', fill: '#000' });
+    this.scoreText.fixedToCamera = true;
     
     //move player with cursor keys
     this.cursors = this.game.input.keyboard.createCursorKeys();
+    console.log(this.cursors);
 
-    
     this.run();
   }
 
@@ -65,26 +64,39 @@ class Game extends Phaser.State {
     // this.inputHandler.update()
     // this.player.update()
 
-     //player movement
-     this.player.body.velocity.y = 0;
-     this.player.body.velocity.x = 0;
-  
-     if(this.cursors.up.isDown) {
-       this.player.body.velocity.y -= 150;
-     }
-     else if(this.cursors.down.isDown) {
-       this.player.body.velocity.y += 150;
-     }
-     if(this.cursors.left.isDown) {
-       this.player.body.velocity.x -= 150;
-     }
-     else if(this.cursors.right.isDown) {
-       this.player.body.velocity.x += 150;
-     }
+    //player movement
+    this.player.body.velocity.y = 0;
+    this.player.body.velocity.x = 0;
 
-    //collision
-    this.game.physics.arcade.collide(this.player, this.blockedLayer);
-    this.game.physics.arcade.overlap(this.player, this.items, this.collect, null, this);
+    if(this.cursors.up.isDown) {
+      this.player.body.velocity.y -= 150;
+    }
+    else if(this.cursors.down.isDown) {
+      this.player.body.velocity.y += 150;
+    }
+    if(this.cursors.left.isDown) {
+      this.player.body.velocity.x -= 150;
+    }
+    else if(this.cursors.right.isDown) {
+      this.player.body.velocity.x += 150;
+    }
+
+    if (this.game.input.activePointer.isDown){
+      this.line1 = null;
+      this.fire();
+    }
+    
+    if (this.game.input.keyboard.isDown(Phaser.Keyboard.E)) {
+      this.line1 = new Phaser.Line(this.player.x, this.player.y, this.game.input.activePointer.x, this.game.input.activePointer.y);
+    }
+
+
+    // Collision.
+    this.game.physics.arcade.collide(this.player, this.layers.mapBlocks);
+    this.game.physics.arcade.overlap(this.player, this.layers.collectObjects, this.collect, null, this);
+  }
+  render() {
+    this.game.debug.geom(this.line1);
   }
 
   posToCoord(obj) {
@@ -102,17 +114,15 @@ class Game extends Phaser.State {
   }
 
   createItems() {
-    //create items
-    this.items = this.game.add.group();
-    this.items.enableBody = true;
+    this.layers.collectObjects.enableBody = true;
     let item, result;    
     result = this.findObjectsByType('item', this.map, 'objectsLayer');
     result.forEach(function(element){
-      this.createFromTiledObject(element, this.items);
+      this.createFromTiledObject(element, this.layers.collectObjects);
     }, this);
   }
 
-  //find objects in a Tiled layer that containt a property called "type" equal to a certain value
+  // Find objects in a Tiled layer that containt a property called "type" equal to a certain value.
   findObjectsByType(type, map, layer) {
     let result = new Array();
     map.objects[layer].forEach(function(element){
@@ -127,7 +137,7 @@ class Game extends Phaser.State {
     return result;
   }
     
-  //create a sprite from an object
+  // Create a sprite from an object.
   createFromTiledObject(element, group) {
     let sprite = group.create(element.x, element.y, element.properties.sprite);
   
@@ -139,12 +149,27 @@ class Game extends Phaser.State {
 
 
   collect(player, collectable) {
-    console.log('yummy!');
- 
+    this.score += 10;
+    this.scoreText.text = 'Score: ' + this.score;
+    
     //remove sprite
     collectable.destroy();
+  }
+
+  fire() {
+    // this.layers.bolts.createMultiple(30, 'bullet', 0, false);
+    let bolt = this.layers.bolts.create(this.player.x, this.player.y, 'bullet');
+    
+    console.log('fire');
+    bolt.rotation = this.game.physics.arcade.moveToPointer(bolt, 1000, this.game.input.activePointer, 500);
   }
 }
 
 export default Game;
-    
+
+
+// 4. Сделать поворот тела по мышке
+// 5. Сделать отображения скила
+
+// Делать группу под каждый скил?
+// Как рисовать и удалять поле скила
