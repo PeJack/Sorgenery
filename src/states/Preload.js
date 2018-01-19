@@ -1,4 +1,5 @@
 class Preload extends Phaser.State {
+  
   loadImages() {
     this.game.load.image('menu4', 'assets/interface/menu4.jpg');
     this.game.load.image('menu5', 'assets/interface/menu5.jpg');
@@ -38,8 +39,8 @@ class Preload extends Phaser.State {
   }
 
   create() {
-    this.game.state.start("MainMenu");
-    // this.game.state.start("Game")
+    // this.game.state.start("MainMenu");
+    this.game.state.start("Client")
   }
 }
 

@@ -8,6 +8,8 @@ class Boot extends Phaser.State {
     this.game.load.image("loaderEmpty", "assets/interface/loader_empty.png");
     this.game.load.spritesheet("loading", "assets/sprites/loading.png", 48, 48);
     this.game.load.spritesheet("button", "assets/sprites/button_sprite_sheet.png", 191, 65);
+
+    this.game.time.advancedTiming = true;
   }
 
   create() {

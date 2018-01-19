@@ -12,13 +12,6 @@ class ButtonHandler {
       right: false,
       menu: false,
     };
-
-    this.buttonHelper = {
-      space: this.keyboard.addKey(Phaser.Keyboard.SPACEBAR),
-      enter: this.keyboard.addKey(Phaser.Keyboard.ENTER),
-      numpadEnter: this.keyboard.addKey(Phaser.Keyboard.NUMPAD_ENTER),
-      x: this.keyboard.addKey(Phaser.Keyboard.X)
-    };
 }
 
   update() {
@@ -32,7 +25,7 @@ class ButtonHandler {
   }
 	
   timeOut() {
-    this.lastTimeOut = this.game.time.now + 200;
+    this.lastTimeOut = this.game.time.now;
     this.reset();
   }
 
@@ -43,28 +36,20 @@ class ButtonHandler {
   }
 
   handleKeyboard() {
-    if (this.keyboard.isDown(Phaser.Keyboard.UP) || this.keyboard.isDown(Phaser.Keyboard.W)) {
+    if (this.keyboard.isDown(Phaser.Keyboard.UP)) {
       this.buttons.up = true;
     }
 
-    if (this.keyboard.isDown(Phaser.Keyboard.DOWN) || this.keyboard.isDown(Phaser.Keyboard.S)) {
+    if (this.keyboard.isDown(Phaser.Keyboard.DOWN)) {
       this.buttons.down = true;
     }
 
-    if (this.keyboard.isDown(Phaser.Keyboard.LEFT) || this.keyboard.isDown(Phaser.Keyboard.A)) {
+    if (this.keyboard.isDown(Phaser.Keyboard.LEFT)) {
       this.buttons.left = true;
     }
 
-    if (this.keyboard.isDown(Phaser.Keyboard.RIGHT) || this.keyboard.isDown(Phaser.Keyboard.D)) {
+    if (this.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
       this.buttons.right = true;
-    }
-
-    if (this.keyboard.isDown(Phaser.Keyboard.E)) {
-      this.buttons.activate = true;
-    }
-
-    if (this.keyboard.isDown(Phaser.Keyboard.ESC)) {
-      this.buttons.menu = true;
     }
   }
 

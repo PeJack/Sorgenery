@@ -22,6 +22,9 @@ var SOURCE_PATH = './src';
 var STATIC_PATH = './static';
 var ENTRY_FILE = SOURCE_PATH + '/Engine.js';
 var OUTPUT_FILE = 'game.js';
+var PLUGINS_PATH = [
+    './node_modules/poly2tri/dist/poly2tri.min.js'
+];
 
 var keepFiles = false;
 
@@ -83,10 +86,16 @@ function copyPhaser() {
     srcList = srcList.map(function(file) {
         return PHASER_PATH + file;
     });
-        
+
     return gulp.src(srcList)
         .pipe(gulp.dest(SCRIPTS_PATH));
 
+}
+
+
+function copyPlugins() {
+    return gulp.src(PLUGINS_PATH)
+        .pipe(gulp.dest(SCRIPTS_PATH));
 }
 
 /**
@@ -150,7 +159,8 @@ function serve() {
 gulp.task('cleanBuild', cleanBuild);
 gulp.task('copyStatic', ['cleanBuild'], copyStatic);
 gulp.task('copyPhaser', ['copyStatic'], copyPhaser);
-gulp.task('build', ['copyPhaser'], build);
+gulp.task('copyPlugins', ['copyPhaser'], copyPlugins);
+gulp.task('build', ['copyPlugins'], build);
 gulp.task('fastBuild', build);
 gulp.task('serve', ['build'], serve);
 gulp.task('watch-js', ['fastBuild'], browserSync.reload); // Rebuilds and reloads the project when executed.
