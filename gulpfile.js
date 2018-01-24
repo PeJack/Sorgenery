@@ -23,7 +23,7 @@ var STATIC_PATH = './static';
 var ENTRY_FILE = SOURCE_PATH + '/Engine.js';
 var OUTPUT_FILE = 'game.js';
 var PLUGINS_PATH = [
-    './node_modules/poly2tri/dist/poly2tri.min.js'
+    './node_modules/rot-js/lib/rot.min.js'
 ];
 
 var keepFiles = false;

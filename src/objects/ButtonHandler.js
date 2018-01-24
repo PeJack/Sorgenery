@@ -2,6 +2,8 @@ class ButtonHandler {
   constructor(game){
     this.game = game;
     this.keyboard = this.game.input.keyboard;
+    this.mouse = this.game.input.activePointer;
+
     this.lastTimeOut = 0;
 
     this.buttons = {
@@ -11,6 +13,7 @@ class ButtonHandler {
       left: false,
       right: false,
       menu: false,
+      attack: false
     };
 }
 
@@ -25,7 +28,7 @@ class ButtonHandler {
   }
 	
   timeOut() {
-    this.lastTimeOut = this.game.time.now;
+    this.lastTimeOut = this.game.time.now + 200;
     this.reset();
   }
 
@@ -51,8 +54,11 @@ class ButtonHandler {
     if (this.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
       this.buttons.right = true;
     }
-  }
 
+    if (this.mouse.isDown) {
+      this.buttons.attack = true;
+    }
+  }
 }
 
 export default ButtonHandler;

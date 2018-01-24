@@ -1,54 +1,103 @@
 class InputHandler {
   constructor(client){
     this.client = client;
-    this.tilesize = 48;
     this.clickPosition = { x: 0, y: 0 };
-
+    this.lastPosition = new Phaser.Point(0, 0);
+    
     this.create();
   }
 
   create() {
-    // this.client.player.sprite.inputEnabled = true;
-
+    this.client.game.input.circle.diameter = this.client.tilesize + 4;
+    this.client.game.input.holdRate = 150;
+    this.client.game.input.onTap.add(this.handleInputTap, this);
     this.buttonHandler = this.client.buttonHandler;
     this.buttons = this.buttonHandler.buttons;
-    this.active = true;
-
-    this.start();
+    this.active = false;
   }
 
   start() {
+    this.action = "none";
     this.active = true;
   }
 
   stop() {
+    this.action = "none";
     this.active = false;
   }
 
-  update() {
-    if (this.buttonHandler.update() && this.active) {
-      this.client.player.sprite.body.velocity.y = 0;
-      this.client.player.sprite.body.velocity.x = 0;
+  handleInputButton() {
+    if (this.buttonHandler.update() && this.action != "waiting" && this.active) {
+      if (this.buttons.up) {
+        this.startWalk(
+          [{
+            y: this.client.player.getPosition().y - 1
+          }],
+          "up"
+        )
+      }
+
+      if (this.buttons.down) {  
+        this.startWalk(
+          [{
+            y: this.client.player.getPosition().y + 1
+          }],
+          "down"
+        )
+      }
 
       if (this.buttons.left) {
-        this.client.player.sprite.body.velocity.x -= 150;
-        this.client.positionUpdated = true; 
-      } else if (this.buttons.right) {
-        this.client.player.sprite.body.velocity.x += 150;
-        this.client.positionUpdated = true;         
+        this.startWalk(
+          [{
+            x: this.client.player.getPosition().x - 1
+          }],
+          "left"
+        )
       }
-  
-      if (this.buttons.up) {
-        this.client.player.sprite.body.velocity.y -= 150; 
-        this.client.positionUpdated = true;        
-      } else if (this.buttons.down) {
-        this.client.player.sprite.body.velocity.y += 150; 
-        this.client.positionUpdated = true;        
+
+      if (this.buttons.right) {
+        this.startWalk(
+          [{
+            x: this.client.player.getPosition().x + 1
+          }],
+          "right"
+        )
       }
+
+      // if (this.buttons.attack) {
+      //     this.attack();
+      // }
 
       this.buttonHandler.timeOut();
     }
   }
+
+  handleInputTap(pointer) {
+    this.attack();
+  }
+
+  startWalk(path, direction) {
+    this.action = "waiting";
+    this.client.player.path = path;
+
+    let currentPath = this.client.player.path.pop();
+
+    if (currentPath) {
+      this.client.player.walkToTile(currentPath, direction, function() {
+        this.action = "none";
+      }, this)
+    }
+  }
+
+  attack() {
+    this.client.player.attack(this.client.game.input.activePointer);
+  }
+
+  update() {
+    this.lastPosition.copyFrom(this.client.game.input.activePointer);
+    this.handleInputButton();
+  }
+
 }
 
 export default InputHandler;

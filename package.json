@@ -21,6 +21,6 @@
   },
   "dependencies": {
     "phaser": "^2.4.1",
-    "poly2tri": "^1.5.0"
+    "rot-js": "^0.6.5"
   }
 }
