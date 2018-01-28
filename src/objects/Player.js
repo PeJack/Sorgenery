@@ -3,7 +3,7 @@ import Helpers from '../Helpers'
 class Player {
   constructor(client, x, y){
     this.client = client;
-    this.group = this.client.layers.entities;
+    this.group = this.client.layers.actors;
     this.scale = 1;
     this.walking = false;
     this.speed = 150;
@@ -12,16 +12,10 @@ class Player {
       y: 0
     };
     this.currentDirection = "down";
-    this.directionCodes = {
-      "up": 0,
-      "down": 4,
-      "left": 6,
-      "right": 2
-    }
 
     this.currentAnimation = null;
     this.sprite = this.group.create(x * this.client.tilesize, y * this.client.tilesize, "48bitSprites");
-    // this.sprite = this.client.game.add.sprite(x * this.client.tilesize, y * this.client.tilesize, "48bitSprites");
+
     this.sprite.anchor.setTo(0.5, 0.5);
     this.sprite.scale.setTo(this.scale, this.scale);
     this.sprite.off = -8;
@@ -34,13 +28,15 @@ class Player {
       y: this.getPosition().y
     };
 
-    this.attackRange = this.client.game.add.graphics(0, 0);
-    this.attackRange.lineStyle(2, 0xFF0000, 0.2);
-    this.attackRange.drawCircle(0, 0, 100);
-    this.attackRange = this.sprite.addChild(this.attackRange);
-    this.attackRange.radius = 100;
+    // initialize weapon - bare hands (id == 0)
+    this.weapon = this.client.weaponsManager.create(0, this);
     
-    this.meleeAnimation = this.client.effectsManager.strike;
+    this.attackRange = this.client.game.add.graphics(0, 0);
+    this.attackRange.range = this.weapon.range;
+    this.attackRange.lineStyle(2, 0xFF0000, 0.2);
+    this.attackRange.drawCircle(0, 0, this.attackRange.range);
+    this.attackRange = this.sprite.addChild(this.attackRange);
+    
     this.walking = false;
     this.path = [];
 
@@ -146,7 +142,7 @@ class Player {
       checkingPath.y = this.getPosition().y;
     }
 
-    if (!this.client.levelManager.map.canGo(checkingPath)) {
+    if (!this.client.mapsManager.canGo(checkingPath)) {
       if (typeof callback == "function") {
         callback.call(handler);
       }
@@ -205,36 +201,12 @@ class Player {
   }
 
   stopWalk(callback, handler) {
-    this.client.entityMap[this.sprite.x + '_' + this.sprite.y] = this;
     this.walking = false;
     this.startIdle();
 
     if (typeof callback == "function") {
       callback.call(handler);
     }
-  }
-
-  attack(path) {
-    let newScale;
-    if (path.worldX <= this.sprite.x) {
-      newScale = this.scale;
-    } else {
-      newScale = -this.scale;
-    }
-
-    if (!Helpers.pointInCircle(
-      path.worldX, path.worldY, 
-      this.attackRange.world.x, 
-      this.attackRange.world.y, 
-      this.attackRange.radius / 2
-      )
-    ) {
-      
-    }
-
-    this.sprite.scale.x = newScale;
-    this.meleeAnimation.call(this.client.effectsManager, path.worldX, path.worldY);
-    this.sprite.animations.play("attack", 16, false);
   }
 }
 

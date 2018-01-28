@@ -2,7 +2,6 @@ class InputHandler {
   constructor(client){
     this.client = client;
     this.clickPosition = { x: 0, y: 0 };
-    this.lastPosition = new Phaser.Point(0, 0);
     
     this.create();
   }
@@ -90,11 +89,10 @@ class InputHandler {
   }
 
   attack() {
-    this.client.player.attack(this.client.game.input.activePointer);
+    this.client.player.weapon.attack(this.client.game.input.activePointer);
   }
 
   update() {
-    this.lastPosition.copyFrom(this.client.game.input.activePointer);
     this.handleInputButton();
   }
 

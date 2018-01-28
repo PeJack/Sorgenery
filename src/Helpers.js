@@ -44,6 +44,12 @@ let Helpers = {
     pointInCircle: function (x, y, cx, cy, radius) {
         let distancesquared = (x - cx) * (x - cx) + (y - cy) * (y - cy);
         return distancesquared <= radius * radius;
+    }, 
+    direction: {
+        up: 0,
+        down: 4,
+        left: 6,        
+        right: 2
     }
 };
 

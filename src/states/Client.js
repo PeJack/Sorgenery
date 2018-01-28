@@ -1,8 +1,10 @@
 import Player from 'objects/Player';
-import InputHandler from 'objects/InputHandler';
-import LevelManager from 'systems/LevelManager';
-import EntityManager from 'systems/EntityManager';
+import InputHandler from 'systems/InputHandler';
+import MapsManager from 'systems/MapsManager';
+import ActorsManager from 'systems/ActorsManager';
 import EffectsManager from 'systems/EffectsManager';
+import ItemsManager from 'systems/ItemsManager';
+import WeaponsManager from 'systems/WeaponsManager';
 
 class Client extends Phaser.State {
     
@@ -13,48 +15,49 @@ class Client extends Phaser.State {
     this.visionRadius = 30;
     this.tilesize = 32;
 
-    this.entityList = [];
-    this.entityMap = {};
+    this.actorsList = [];
+    this.actorsMap  = {};
+
+    this.weaponsList = [];
+    this.weaponsMap  = {};
+
+    this.itemsList = [];
+    this.itemsMap = {};
   }
 
   create() {
-    this.levelManager    = new LevelManager(this);
-    this.entityManager   = new EntityManager(this);
+    this.mapsManager     = new MapsManager(this);
+    this.actorsManager   = new ActorsManager(this);
+    this.weaponsManager  = new WeaponsManager(this);
     this.buttonHandler   = this.game.buttonHandler;
     this.inputHandler    = new InputHandler(this);
 
-    this.levelManager.init();
+    this.mapsManager.init();
 
-    this.layers.entities = this.game.add.group();
+    this.layers.actors   = this.game.add.group();
     this.layers.effects  = this.game.add.group();
+    this.layers.items    = this.game.add.group();    
     this.effectsManager  = new EffectsManager(this);
 
-    this.entityManager.init();
+    this.actorsManager.init();
 
-    this.player = this.entityList[0];
-    // this.player.sprite.x = startCol;
-    // this.player.sprite.y = startRow;
-    // this.game.physics.arcade.enable(this.player.sprite);
+    this.player = this.actorsList[0];
     this.game.camera.follow(this.player.sprite);
-    // this.player.sprite.inputEnabled = true;
-    // this.player.sprite.body.collideWorldBounds = true;
     
     this.run();
   }
 
   run() {
-    this.levelManager.map.light();
+    this.mapsManager.map.light();
     this.inputHandler.start();
   }
 
   update() {
-    // this.player.update();
     this.inputHandler.update();
-    // this.game.physics.arcade.collide(this.player.sprite, this.layers.decoration);
 
     if (this.positionUpdated) {
       this.positionUpdated = false;
-      this.levelManager.map.computeLight();
+      this.mapsManager.map.computeLight();
     }
   }
 

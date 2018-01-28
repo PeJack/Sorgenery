@@ -51,6 +51,9 @@ class EffectsManager {
     this.sprite.reset(x, y - 6);
     this.sprite.animations.play("scratch", 12, false);
   }
+
+  arrowHit(dir) {
+  }
 }
 
 export default EffectsManager;

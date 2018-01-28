@@ -1,4 +1,4 @@
-import ButtonHandler from 'objects/ButtonHandler'
+import ButtonHandler from 'systems/ButtonHandler'
 
 class Boot extends Phaser.State {
 
