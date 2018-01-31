@@ -31,6 +31,7 @@ class ActorsManager {
 			} while (this.client.actorsMap[x + '_' + y]);
 
 			actor = new Player(this.client, x, y);
+
 			this.client.actorsMap[actor.sprite.x + '_' + actor.sprite.y] = actor;
 			this.client.actorsList.push(actor);
 		}

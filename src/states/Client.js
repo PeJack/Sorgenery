@@ -5,6 +5,7 @@ import ActorsManager from 'systems/ActorsManager';
 import EffectsManager from 'systems/EffectsManager';
 import ItemsManager from 'systems/ItemsManager';
 import WeaponsManager from 'systems/WeaponsManager';
+import VisualTimer from 'systems/VisualTimer';
 
 class Client extends Phaser.State {
     
@@ -37,6 +38,8 @@ class Client extends Phaser.State {
     this.layers.actors   = this.game.add.group();
     this.layers.effects  = this.game.add.group();
     this.layers.items    = this.game.add.group();    
+    this.layers.hud      = this.game.add.group();
+
     this.effectsManager  = new EffectsManager(this);
 
     this.actorsManager.init();
@@ -52,12 +55,18 @@ class Client extends Phaser.State {
     this.inputHandler.start();
   }
 
-  update() {
+  preRender() {
     this.inputHandler.update();
+  }
 
+  update() {
     if (this.positionUpdated) {
       this.positionUpdated = false;
       this.mapsManager.map.computeLight();
+    }
+
+    if (!this.player.weapon.visualTimer.hasFinished) {
+      this.player.weapon.update();
     }
   }
 
@@ -77,9 +86,9 @@ class Client extends Phaser.State {
     }
   }
 
-  render() {
-    this.game.debug.text(this.game.time.fps || '--', 2, 14, "#a7aebe");
-  }
+  // render() {
+  //   this.game.debug.text(this.game.time.fps || '--', 2, 14, "#a7aebe");
+  // }
 }
 
 export default Client;

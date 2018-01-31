@@ -20,7 +20,7 @@
     "yargs": "^3.16.1"
   },
   "dependencies": {
-    "phaser": "^2.4.1",
+    "phaser-ce": "^2.7.0",
     "rot-js": "^0.6.5"
   }
 }

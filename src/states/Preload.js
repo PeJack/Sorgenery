@@ -26,7 +26,9 @@ class Preload extends Phaser.State {
 
     this.game.load.setPreloadSprite(this.preloadBar);
 
-    this.game.load.spritesheet("48bitSprites", "assets/sprites/48bitSprites.png", 48, 48)
+    this.game.load.spritesheet("48bitSprites", "assets/sprites/48bitSprites.png", 48, 48);
+    this.game.load.spritesheet("timer", 'assets/interface/timer.png', 66, 10);
+    this.game.load.spritesheet("timer_bg", 'assets/interface/timer_bg.png', 66, 10);
 
     this.game.load.tilemap('lvl1', 'assets/sprites/lvl1.json', null, Phaser.Tilemap.TILED_JSON);
     this.game.load.image('tiles', 'assets/sprites/terrain_atlas.png');

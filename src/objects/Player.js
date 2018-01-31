@@ -57,55 +57,6 @@ class Player {
     this.setAnimations();
   }
 
-  update() {
-    this.sprite.body.velocity.x = 0;
-    this.sprite.body.velocity.y = 0;
-
-    if (this.buttonHandler.update()) {
-      if (this.buttons.left) {
-        this.moveSpeed.x = -this.speed;
-        this.sprite.scale.x = this.scale;
-        this.currentAnimation = "walk";
-      } else if (this.buttons.right) {
-        this.moveSpeed.x = this.speed;
-        this.sprite.scale.x = -this.scale;        
-        this.currentAnimation = "walk";
-      } else {
-        this.moveSpeed.x = 0;
-        this.currentAnimation = "idle";
-      }
-  
-      if (this.buttons.up) {
-        this.moveSpeed.y = -this.speed;
-        this.currentAnimation = "walkup";
-      } else if (this.buttons.down) {
-        this.moveSpeed.y = this.speed;
-        this.currentAnimation = "walk";      
-      } else {
-        this.moveSpeed.y = 0;
-        this.currentAnimation = "idle";      
-      }
-  
-      if (Math.abs(this.moveSpeed.x) > 0 || Math.abs(this.moveSpeed.y) > 0) {
-        this.sprite.body.velocity.x = this.moveSpeed.x;
-        this.sprite.body.velocity.y = this.moveSpeed.y;
-      }
-  
-      if (Math.abs(this.sprite.body.velocity.x) > 0 || Math.abs(this.sprite.body.velocity.y) > 0) {
-        this.position = {
-          x: this.getPosition().x,
-          y: this.getPosition().y
-        };
-        this.client.positionUpdated = true;
-        this.sprite.animations.play(this.currentAnimation, 12, true);
-      } else {
-        this.sprite.animations.stop();
-      }
-
-      this.buttonHandler.timeOut();
-    }
-  }
-
   setAnimations() {
     let spriteOffset = 110;
 

@@ -17,8 +17,10 @@ class MapsManager {
     map.addTilesetImage('forest-tiles', 'forest-tiles');
     
     this.client.layers.ground = map.createLayer('ground');
+    this.client.layers.ground.renderSettings.enableScrollDelta = false;
     this.client.layers.ground.resizeWorld();
     this.client.layers.decoration = map.createLayer('decoration');
+    this.client.layers.decoration.renderSettings.enableScrollDelta = false;    
     this.client.layers.decoration.resizeWorld();
 	
 	  this.map = new Map(this.client, this.mapData, map, this.cols, this.rows);
@@ -113,7 +115,6 @@ class MapsManager {
 				if (y > 0) {
 					jsonmap.layers[1].data[(y - 1) * width + x] = 9;
 				}
-			
   	  }
   	);
 
@@ -186,7 +187,6 @@ class MapsManager {
   	  '000', cbSetBackground(4)
   	);
 
-
 		addPattern(
 			'**1' +
 			'0*0' +
@@ -205,7 +205,6 @@ class MapsManager {
 			'1*0' +
   	  '*00', cbSetBackground(8)
   	);
-
 
 		addPattern(
 			'*00' +
@@ -237,13 +236,11 @@ class MapsManager {
   	  '111', cbSetBackground(15)
   	);
 
-
 		addPattern(
 			'*00' +
 			'1*0' +
   	  '1*1', cbSetBackground(13)
   	);
-
 
 		// 2 Последних паттерна - декорации (пни)
 		addPattern(
@@ -267,7 +264,6 @@ class MapsManager {
 				jsonmap.layers[1].data[tilepos] = f;
   	  }
   	);
-
 
 		for (let y = 0; y < _map._height; y++) {
 			for (let x = 0; x < _map._width; x++) {

@@ -13,12 +13,14 @@ class Boot extends Phaser.State {
   }
 
   create() {
-    this.game.stage.smoothed = false;
-    this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-    this.game.scale.fullScreenScaleMode = Phaser.ScaleManager.SHOW_ALL;
-    this.game.stage.disableVisibilityChange = true;
-    this.game.scale.pageAlignHorizontally = true;
-    this.game.scale.pageAlignVertically = true;
+    // this.game.stage.smoothed = false;
+    // this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+    // this.game.scale.fullScreenScaleMode = Phaser.ScaleManager.SHOW_ALL;
+    // this.game.stage.disableVisibilityChange = true;
+    // this.game.scale.pageAlignHorizontally = true;
+    // this.game.scale.pageAlignVertically = true;
+    this.game.clearBeforeRender = false;
+    this.game.forceSingleUpdate = true;
 
     this.game.buttonHandler = new ButtonHandler(this.game);
     this.game.debugging = false;

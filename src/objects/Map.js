@@ -38,6 +38,7 @@ class Map {
             tile.alpha = 0.1;
           } else {
             tile.alpha = 0;
+            tile.visible = false; 
           }
         }
 
@@ -47,6 +48,7 @@ class Map {
             tile.alpha = 0.1;
           } else {
             tile.alpha = 0;
+            tile.visible = false;             
           }
         }
 
@@ -54,7 +56,7 @@ class Map {
           let itemPos = this.client.getPosition(item);
   
           if (Math.round(itemPos.x) == x && Math.round(itemPos.y) == y) {
-            item.alpha = 0;
+            item.alpha = 0;          
           }
         }, this)
       }

@@ -11,7 +11,7 @@ class Engine extends Phaser.Game {
   constructor() {
 
     // super(window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio, Phaser.AUTO);
-    super('100%', '100%', Phaser.AUTO);
+    super('100%', '100%', Phaser.CANVAS);
     this.state.add('Boot', Boot, false);
     this.state.add('Preload', Preload, false);
     this.state.add('Client', Client, false);

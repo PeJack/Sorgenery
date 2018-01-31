@@ -1,14 +1,39 @@
-import Helpers from '../Helpers'
+import Helpers from '../Helpers';
+import VisualTimer from '../systems/VisualTimer';
 
 class Weapon {
-  constructor(client, id, type, damage, range, effect, actor) {
+  constructor(client, id, type, damage, range, reloadTime, effect, actor) {
     this.client = client;
     this.id = id;
     this.type = type;
     this.damage = damage;
     this.range = range;
+    this.reloadTime = reloadTime;    
     this.effect = effect;
     this.actor = actor;
+    this.reloading = false;
+
+    this.visualTimer  = new VisualTimer({
+      client: this.client,
+      key: "timer",
+      seconds: this.reloadTime
+    });
+
+    let self = this;
+    this.visualTimer.onComplete = function () {
+      self.reloading = false;
+    }
+
+    // this.actor.sprite.addChild(this.visualTimer.background);
+    // this.actor.sprite.addChild(this.visualTimer.sprite);
+  }
+
+  update() {
+    this.visualTimer.sprite.x = this.actor.sprite.x - 30;
+    this.visualTimer.sprite.y = this.actor.sprite.y;
+
+    this.visualTimer.background.x = this.actor.sprite.x - 30;
+    this.visualTimer.background.y = this.actor.sprite.y;
   }
 
   attack(path) {
@@ -21,6 +46,7 @@ class Weapon {
 
   meleeAttack(path) {
     if (!this.actor) { return; }
+    if (this.reloading) { return; }
 
     let newScale, obj1, obj2, angleRadians, angleDeg, x, y;
 
@@ -56,8 +82,10 @@ class Weapon {
   }
   
   rangeAttack(path) {
-    let obj1, obj2, angle, x, y, offsetX, offsetY, checkingPath, reached;
+    if (!this.actor) { return; }
+    if (this.reloading) { return; }
 
+    let obj1, obj2, angle, x, y, offsetX, offsetY, checkingPath, reached;
     let newPath = [];
 
     obj1 = {x: path.worldX, y: path.worldY};
@@ -125,6 +153,11 @@ class Weapon {
     projectile.frame = Helpers.spriteOffset.normalArrow;
     projectile.anchor.setTo(0.5, 0.5);
     projectile.angle = angle + 180;
+    
+    this.reloading = true;
+    this.visualTimer.sprite.visible = true;
+
+    this.visualTimer.start();
 
     this.createProjectile(newPath, projectile);
   }
