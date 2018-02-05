@@ -52,13 +52,17 @@ class Map {
           }
         }
 
-        this.client.layers.items.forEach(function(item) {
-          let itemPos = this.client.getPosition(item);
+        if (this.client.itemsMap.hasOwnProperty(x + "." + y)) {
+          this.client.itemsMap[x + "." + y].alpha = 0;
+        }
+
+        // this.client.layers.items.forEach(function(item) {
+        //   let itemPos = this.client.getPosition(item);
   
-          if (Math.round(itemPos.x) == x && Math.round(itemPos.y) == y) {
-            item.alpha = 0;          
-          }
-        }, this)
+        //   if (itemPos.x == x && itemPos.y == y) {
+        //     item.alpha = 0;  
+        //   }
+        // }, this)
       }
     }
   }
@@ -74,8 +78,6 @@ class Map {
     let currentDirection = this.client.player.currentDirection;
     
     this.fov.compute(this.client.player.position.x, this.client.player.position.y, 10, function (x, y, r, visibility) {
-      x = Math.round(x);
-      y = Math.round(y);
       let tile = self.phasermap.getTile(x, y, 0);
       
       if (tile) {
@@ -89,13 +91,16 @@ class Map {
         tile.explored = true;
       }
 
-      self.client.layers.items.forEach(function(item) {
-        let itemPos = self.client.getPosition(item);
+      // self.client.layers.effects.forEach(function(effect) {
+      //   let pos = self.client.getPosition(effect);
+      //   if (Math.round(pos.x) == x && Math.round(pos.y) == y) {
+      //     effect.alpha = visibility;
+      //   }
+      // })
 
-        if (Math.round(itemPos.x) == x && Math.round(itemPos.y) == y) {
-          item.alpha = visibility;
-        }
-      })
+      if (self.client.itemsMap.hasOwnProperty(x + "." + y)) {
+        self.client.itemsMap[x + "." + y].alpha = visibility;
+      }
       // if (self.client.itemsMap.hasOwnProperty(x + '_' + y)) {
       //   self.client.itemsMap[x + '_' + y].alpha = visibility;
       // }

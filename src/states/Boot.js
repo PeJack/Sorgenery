@@ -10,6 +10,7 @@ class Boot extends Phaser.State {
     this.game.load.spritesheet("button", "assets/sprites/button_sprite_sheet.png", 191, 65);
 
     this.game.time.advancedTiming = true;
+    this.game.canvas.oncontextmenu = function (e) { e.preventDefault(); }
   }
 
   create() {
@@ -19,8 +20,8 @@ class Boot extends Phaser.State {
     // this.game.stage.disableVisibilityChange = true;
     // this.game.scale.pageAlignHorizontally = true;
     // this.game.scale.pageAlignVertically = true;
-    this.game.clearBeforeRender = false;
-    this.game.forceSingleUpdate = true;
+    // this.game.clearBeforeRender = false;
+    // this.game.forceSingleUpdate = true;
 
     this.game.buttonHandler = new ButtonHandler(this.game);
     this.game.debugging = false;

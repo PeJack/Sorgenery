@@ -1,4 +1,4 @@
-import Helpers from '../Helpers'
+import Helpers from '../Helpers';
 
 class Player {
   constructor(client, x, y){
@@ -127,13 +127,6 @@ class Player {
   }
 
   startWalk(direction) {
-    this.position = {
-      x: this.getPosition().x,
-      y: this.getPosition().y
-    };
-
-    this.client.positionUpdated = true;
-
     if (this.walking == false) {
       this.walking = true;
     }
@@ -155,9 +148,20 @@ class Player {
     this.walking = false;
     this.startIdle();
 
+    this.position = {
+      x: this.getPosition().x,
+      y: this.getPosition().y
+    };
+
+    this.client.positionUpdated = true;
+    
     if (typeof callback == "function") {
       callback.call(handler);
     }
+  }
+
+  pickUp(item) {
+    this.inventory.addItem(item);
   }
 }
 

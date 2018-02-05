@@ -34,6 +34,8 @@ class InputHandler {
           }],
           "up"
         )
+
+        this.buttonHandler.timeOut();
       }
 
       if (this.buttons.down) {  
@@ -43,6 +45,8 @@ class InputHandler {
           }],
           "down"
         )
+
+        this.buttonHandler.timeOut();
       }
 
       if (this.buttons.left) {
@@ -52,6 +56,8 @@ class InputHandler {
           }],
           "left"
         )
+
+        this.buttonHandler.timeOut();
       }
 
       if (this.buttons.right) {
@@ -61,17 +67,18 @@ class InputHandler {
           }],
           "right"
         )
+
+        this.buttonHandler.timeOut();
       }
-
-      // if (this.buttons.attack) {
-      //     this.attack();
-      // }
-
-      this.buttonHandler.timeOut();
     }
   }
 
   handleInputTap(pointer) {
+    for(let item of this.client.inventory.items) {
+      if (item.input.pointerOver()) {
+        return;
+      }      
+    }
     this.attack();
   }
 

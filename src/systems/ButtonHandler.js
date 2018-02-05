@@ -3,6 +3,7 @@ class ButtonHandler {
     this.game = game;
     this.keyboard = this.game.input.keyboard;
     this.mouse = this.game.input.activePointer;
+    this.game.input.mouse.capture = true;
 
     this.lastTimeOut = 0;
 
@@ -13,7 +14,8 @@ class ButtonHandler {
       left: false,
       right: false,
       menu: false,
-      attack: false
+      attack: false,
+      inventory: false
     };
 }
 
@@ -28,7 +30,7 @@ class ButtonHandler {
   }
 	
   timeOut() {
-    this.lastTimeOut = this.game.time.now + 200;
+    this.lastTimeOut = this.game.time.now;
     this.reset();
   }
 
@@ -57,6 +59,10 @@ class ButtonHandler {
 
     if (this.mouse.isDown) {
       this.buttons.attack = true;
+    }
+
+    if (this.keyboard.isDown(Phaser.Keyboard.I)) {
+      this.buttons.inventory = true;
     }
   }
 }

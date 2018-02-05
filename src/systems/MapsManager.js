@@ -1,4 +1,4 @@
-import Map from '../objects/Map';
+import Map from '../components/Map';
 import ROT from 'rot-js';
 
 class MapsManager {
@@ -199,7 +199,6 @@ class MapsManager {
   	  '001', cbSetBackground(5)
   	);
 
-
 		addPattern(
 			'*00' +
 			'1*0' +
@@ -290,18 +289,20 @@ class MapsManager {
 		}
 
 		return _map;
-	}
+	};
 	
 	canGo(direction) {
-    direction.x = Math.round(direction.x);
-    direction.y = Math.round(direction.y);
+    let dir = direction;
+
+    dir.x = Math.round(dir.x);
+    dir.y = Math.round(dir.y);
 		
-		return direction.x >= 0 &&
-    direction.x < this.rows &&
-    direction.y >= 0 &&
-    direction.y < this.cols &&
-    this.map.tiles[direction.x][direction.y] === 0;
-  }
+		return dir.x >= 0 &&
+    dir.x < this.rows &&
+    dir.y >= 0 &&
+    dir.y < this.cols &&
+    this.map.tiles[dir.x][dir.y] === 0;
+ 	 };
 }
 
 export default MapsManager;

@@ -1,9 +1,16 @@
 class Preload extends Phaser.State {
   
-  loadImages() {
-    this.game.load.image('menu4', 'assets/interface/menu4.jpg');
-    this.game.load.image('menu5', 'assets/interface/menu5.jpg');
-    this.game.load.image('menu6', 'assets/interface/menu6.jpg');
+  loadInterface() {
+    this.game.load.spritesheet("48bitSprites", "assets/sprites/48bitSprites.png", 48, 48);
+    this.game.load.spritesheet("timer", 'assets/interface/timer.png', 66, 10);
+    this.game.load.spritesheet("timer_bg", 'assets/interface/timer_bg.png', 66, 10);
+    this.game.load.atlas("inventory", 'assets/interface/invent.png', 'assets/interface/invent.json', Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
+  }
+
+  loadWeapons() {
+    this.game.load.image('wp_arb11', 'assets/sprites/weapons/wp_arb11.png');
+    this.game.load.image('wp_arb12', 'assets/sprites/weapons/wp_arb12.png');
+    this.game.load.image('wp_arb13', 'assets/sprites/weapons/wp_arb13.png'); 
   }
 
   preload() {
@@ -26,19 +33,11 @@ class Preload extends Phaser.State {
 
     this.game.load.setPreloadSprite(this.preloadBar);
 
-    this.game.load.spritesheet("48bitSprites", "assets/sprites/48bitSprites.png", 48, 48);
-    this.game.load.spritesheet("timer", 'assets/interface/timer.png', 66, 10);
-    this.game.load.spritesheet("timer_bg", 'assets/interface/timer_bg.png', 66, 10);
-
-    this.game.load.tilemap('lvl1', 'assets/sprites/lvl1.json', null, Phaser.Tilemap.TILED_JSON);
-    this.game.load.image('tiles', 'assets/sprites/terrain_atlas.png');
-    this.game.load.image('carrot', 'assets/sprites/carrot.png');
-    this.game.load.image('eggplant', 'assets/sprites/eggplant.png');
-    this.game.load.image('bullet', 'assets/sprites/bullet.png');
     this.game.load.image('forest-tiles', 'assets/sprites/foresttiles_0.png');
     this.game.load.json('items', 'data/items.json');
 
-    this.loadImages();
+    this.loadInterface();
+    this.loadWeapons();
   }
 
   create() {

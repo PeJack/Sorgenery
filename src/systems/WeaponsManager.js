@@ -1,4 +1,4 @@
-import Weapon from '../objects/Weapon';
+import Weapon from '../components/Weapon';
 
 class WeaponsManager {
     constructor(client) {
@@ -23,7 +23,7 @@ class WeaponsManager {
         reloadTime = w[37] || w.reloadTime;
         effect = type == 'melee' ? this.client.effectsManager.strike : this.client.effectsManager.scratch;
         weapon = new Weapon(this.client, id, type, damage, range, reloadTime, effect, actor);
-        this.client.weaponsList.push(weapon)
+        // this.client.weaponsList.push(weapon)
       }
 
       return weapon;

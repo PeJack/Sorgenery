@@ -1,4 +1,5 @@
-import Player from '../objects/Player';
+import Player from '../components/Player';
+import Helpers from '../Helpers';
 
 class ActorsManager {
   constructor(client) {
@@ -9,10 +10,6 @@ class ActorsManager {
 	  this.client.actorsList = [];
 	  this.client.actorsMap = {};
 	  let actor, x, y;
-
-	  let random = function(max) {
-	  	return Math.floor(Math.random() * max);
-    };
     
     let validpos = [];
 		for (x = 0; x < this.client.mapsManager.cols; x++) {
@@ -25,7 +22,7 @@ class ActorsManager {
     
     for (let e = 0; e < 1; e++) {
 			do {
-				let r = validpos[random(validpos.length)];
+				let r = validpos[Helpers.random(validpos.length)];
 				x = r.x;
 				y = r.y;
 			} while (this.client.actorsMap[x + '_' + y]);
