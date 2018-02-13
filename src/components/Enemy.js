@@ -39,6 +39,26 @@ class Enemy extends Actor {
   moveTo(path) {
     let firstPath = path.shift();
 
+    if (!firstPath) {
+      this.alerted = false;
+      this.alertedHasFinished = true;
+      return;
+    }
+
+    if (this.client.actorsMap.hasOwnProperty(firstPath.x + "." + firstPath.y)) {
+      path = this.client.mapsManager.map.pathfinding(this, this.client.player);
+      if (path.length > 1) path.shift();
+
+      let timer = this.client.game.time.create(true);
+      timer.add(100, function() {
+        this.moveTo(path)
+      }, this);
+
+      timer.start();
+
+      return;
+    }
+
     if (this.client.mapsManager.map.computeVisibilityBetween(this, this.client.player)) {
       if (this.alertedTimer) this.alertedTimer.destroy();
       this.alertedTimer = this.client.game.time.create(false);

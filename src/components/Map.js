@@ -14,7 +14,9 @@ class Map {
     this.passableCb = function (x, y) {
       x = Math.round(x);
       y = Math.round(y);
-      return typeof self.tiles[x] === 'undefined' || typeof self.tiles[x][y] === 'undefined' || self.tiles[x][y] === 0;
+      return typeof self.tiles[x] === 'undefined' || 
+        typeof self.tiles[x][y] === 'undefined' || 
+        self.tiles[x][y] === 0;
     };
   }
 
@@ -52,10 +54,12 @@ class Map {
           }
         }
 
-        if (this.client.actorsMap.hasOwnProperty(x + "." + y)) {
-          this.client.actorsMap[x + "." + y].sprite.alpha = 0;
-          this.client.actorsMap[x + "." + y].visibleForPlayer = false;
-        }
+        this.client.actorsList.forEach(function(actor) {
+          if (actor.position.x == x && actor.position.y == y) {
+            actor.sprite.alpha = 0;
+            actor.visibleForPlayer = false;
+          }
+        }) 
 
         if (this.client.itemsMap.hasOwnProperty(x + "." + y)) {
           this.client.itemsMap[x + "." + y].alpha = 0;
@@ -67,9 +71,6 @@ class Map {
   computeLight() {
     this.resetLight();
     let self = this;
-    // this.client.actorsList.forEach(function(entity) {
-    //     entity.sprite.alpha = 0;
-    // });
 
     this.client.player.sprite.alpha = 1;
     
@@ -86,11 +87,13 @@ class Map {
         tile.alpha = visibility;
         tile.explored = true;
       }
-
-      if (self.client.actorsMap.hasOwnProperty(x + "." + y)) {
-        self.client.actorsMap[x + "." + y].sprite.alpha = visibility;
-        self.client.actorsMap[x + "." + y].visibleForPlayer = true;
-      }
+      
+      self.client.actorsList.forEach(function(actor) {
+        if (actor.position.x == x && actor.position.y == y) {
+          actor.sprite.alpha = visibility;
+          actor.visibleForPlayer = true;
+        }
+      }) 
 
       if (self.client.itemsMap.hasOwnProperty(x + "." + y)) {
         self.client.itemsMap[x + "." + y].alpha = visibility;
@@ -103,11 +106,9 @@ class Map {
   
   computeVisibilityBetween(actor1, actor2) {
     let self = this, visible = false;
-    this.fov.compute(actor1.position.x, actor1.position.y, 7, function (x, y, r, visibility) {
-      if (self.client.actorsMap.hasOwnProperty(x + "." + y)) {
-        if (self.client.actorsMap[x + "." + y] == actor2) {
-          visible = true;
-        }
+    this.fov.compute(actor1.position.x, actor1.position.y, 10, function (x, y, r, visibility) {
+      if (actor2.position.x == x && actor2.position.y == y) {
+        visible = true;
       }
     });
 

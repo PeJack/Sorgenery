@@ -57,7 +57,7 @@ class Client extends Phaser.State {
 
     this.player = this.actorsManager.create(0);
 
-    for (let i = 1; i < 1000; i++) {
+    for (let i = 1; i < 50; i++) {
       let pos = {
         x: this.player.position.x,
         y: this.player.position.y - 6
@@ -124,17 +124,28 @@ class Client extends Phaser.State {
     return Phaser.Rectangle.intersects(boundsA, boundsB);
   }
 
+  checkCollision(pos) {
+    let collide = false;
+    this.actorsList.forEach(function(actor) {
+      if (actor.position.x == pos.x && actor.position.y == pos.y) {
+        collide = true;
+      }
+    })
+
+    return collide;
+  }
+
   render() {
     this.game.debug.text(this.game.time.fps || '--', 2, 14, "#a7aebe");
     // this.game.debug.spriteBounds(this.inventory.background);
     this.game.debug.text(("x: " + this.player.position.x + " y: " + this.player.position.y) || '--', 2, 32, "#a7aebe");
     
     // this.game.debug.text( this.actorsList[1].alertedTimer.seconds || '--', 2, 50, "#a7aebe"); 
-    let i = 0;
-    for (let key in this.actorsMap) {
-      this.game.debug.text("index: " + i + " pos: " + key +  "  isPlayer: " + this.actorsMap[key].isPlayer, 2, 32 + (i + 1) * 15, "#a7aebe");   
-      i++;   
-    }
+    // let i = 0;
+    // for (let key in this.actorsMap) {
+    //   this.game.debug.text("index: " + i + " pos: " + key +  "  isPlayer: " + this.actorsMap[key].isPlayer, 2, 32 + (i + 1) * 15, "#a7aebe");   
+    //   i++;   
+    // }
     // this.actorsMap.forEach(function(key, value) {
     //   this.game.debug.text("key:" + key +  " value:" + slot.y, 2, 32 + (index + 1) * 15, "#a7aebe");
     // }, this)

@@ -75,6 +75,18 @@ class Actor {
       
       return; 
     }
+    
+    if (this.isPlayer && this.client.checkCollision(checkingPath)) {
+      if (typeof callback == "function") {
+        callback.call(handler);
+      }
+      
+      return; 
+    }
+
+    if (!this.isPlayer) {
+      this.client.actorsMap[checkingPath.x + "." + checkingPath.y] = this;
+    }
 
     let newCoords = this.client.posToCoord(path);
     if (newCoords.x) {
@@ -119,7 +131,9 @@ class Actor {
       }
     }
 
-    delete this.client.actorsMap[this.position.x + "." + this.position.y];
+    if (!this.isPlayer){
+      delete this.client.actorsMap[this.position.x + "." + this.position.y];
+    }
   }
 
   stopWalk(callback, handler) {
@@ -131,11 +145,16 @@ class Actor {
       y: this.getPosition().y
     };
 
-    this.client.actorsMap[this.position.x + "." + this.position.y] = this;
     this.client.positionUpdated = true;    
 
     if (typeof callback == "function") {
       callback.call(handler);
+    }
+  }
+
+  destroy() {
+    if (!this.isPlayer){
+      delete this.client.actorsMap[this.position.x + "." + this.position.y];
     }
   }
 }

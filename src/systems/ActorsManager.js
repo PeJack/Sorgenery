@@ -5,7 +5,6 @@ import Helpers from '../Helpers';
 class ActorsManager {
   constructor(client) {
     this.client = client;
-    this.localID = 0;
     this.list = [
       {id: 1, damage: 10, title: "Orc", isPlayer: false}
     ]
@@ -58,10 +57,11 @@ class ActorsManager {
       } else {
         actor = new Enemy(this.client, data, pos);
       }
-      
-      this.localID++;
-      this.client.actorsList.push(actor);
-      this.client.actorsMap[r.x + "." + r.y] = actor;
+
+      if (!actor.isPlayer) {
+        this.client.actorsList.push(actor);
+        this.client.actorsMap[r.x + "." + r.y] = actor;
+      }
     }
 
     return actor;
