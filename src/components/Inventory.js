@@ -11,8 +11,10 @@ class Inventory {
     this.slots = 15;
 
     this.padding = 2;
-    this.iconSize = 40;
+    this.iconSize = 35;
     this.cols = 5;
+
+    this.activeItem = null;
     
     this.width = 
       (this.iconSize * this.cols) + 
@@ -26,9 +28,6 @@ class Inventory {
       Math.ceil(this.slots / this.cols) +
       this.padding;
     
-    // let headerGraphics = this.client.game.make.bitmapData(this.width, 20);
-    // headerGraphics.ctx.fillStyle = '#111111';
-    // headerGraphics.ctx.fillRect(0, 0, this.width, 12);
     this.header = this.group.create(window.screen.width - (this.width + 90), 30, "inventory", 1);
     this.header.width = this.width + 90;
     this.header.fixedToCamera = true;
@@ -37,8 +36,6 @@ class Inventory {
     this.header.input.useHandCursor = true;
 
     let bgGraphics  = this.client.game.make.bitmapData(this.width, this.height);
-    // bgGraphics.ctx.fillStyle = 'rgba(0, 0, 0, 0)';
-    // bgGraphics.ctx.fillRect(0, 0, this.width, this.height);
     this.background = this.group.create(this.header.x + 18, this.header.y + 30, bgGraphics);
     this.background.width = this.width + 50;
     this.background.height = this.height + 15;  
@@ -60,24 +57,34 @@ class Inventory {
     }, this);
 
 
-    let count = 0;
+    let count = 0, decor, slot;
     for (let y = this.padding + 5; y < this.height; y += this.iconSize + this.padding) {
       for (let x = this.padding; x < this.width; x += this.iconSize + this.padding) {
         if (count < this.slots) {
           if (count < 5) {
             let index = count + 3 == 6 ? 5 : count + 3 > 6 ? count + 2 : count  + 3;
-            let decor = this.client.game.add.sprite(x, y + 2, "inventory", index);
+            decor = this.client.game.add.sprite(x, y + 2, "inventory", index);
             decor.alpha = 0.1;
             decor.width = this.iconSize;
-            decor.height = this.iconSize - 5;
+            decor.height = this.iconSize - 3;
+            this.background.addChild(decor);
+          } else {
+            let decorGraphics  = this.client.game.make.bitmapData(this.iconSize, this.iconSize);
+            decorGraphics.ctx.fillStyle = 'rgba(68, 131, 65, 1)';
+            decorGraphics.ctx.fillRect(0, 0, this.iconSize, this.iconSize);
+            decor = this.client.game.add.sprite(x, y, decorGraphics);
+            decor.addChild(this.client.game.add.sprite(3, 3, "ic_hand"));
+
+            decor.visible = false;
             this.background.addChild(decor);
           }
-
-          let slot = this.client.game.add.sprite(x, y, "inventory", count < 5 ? 15 : 16);
+          slot = this.client.game.add.sprite(x, y, "inventory", count < 5 ? 15 : 16);
  
           slot.width = this.iconSize;
           slot.height = this.iconSize;
           slot.special = count < 5;
+          slot.decor = decor;
+          slot.tint = 0x736861;
 
           this.background.addChild(slot);
           this.background.slots.push(slot);
@@ -105,8 +112,9 @@ class Inventory {
   }
 
   open() {
-    this.header.visible = !this.header.visible;
+    // this.header.visible = !this.header.visible;
     this.background.visible = !this.background.visible;
+    this.fakeBg.visible = !this.fakeBg.visible;
   }
 
   addItem(item) {
@@ -172,6 +180,7 @@ class Inventory {
         this.background.addChild(item);
         emptySlot.item = item;
         item.slot = emptySlot;
+        item.actor = this.actor;
 
         if (Helpers.find(emptySlot.item.children, "title", "stackText")) {
           let stackText = Helpers.find(emptySlot.item.children, "title", "stackText");
@@ -248,13 +257,36 @@ class Inventory {
             if (item.stack > 1) {
               item.stack -= 1;
               Helpers.find(item.children, "title", "stackText").setText(item.stack);
-              this.client.itemsManager.create(item.id, null, this.actor.sprite);
+              this.client.itemsManager.create(item.id, this.actor.sprite, null);
             } else {
               item.kill();
               item.slot.item = undefined;
               this.background.removeChild(item);
               this.items.splice(this.items.indexOf(item), 1);
-              this.client.itemsManager.create(item.id, null, this.actor.sprite);              
+              this.client.itemsManager.create(item.id, this.actor.sprite, null);              
+            }
+          }
+
+          if (pointer.leftButton.isDown) {
+            if (this.activeItem && this.activeItem.reloading) { return };
+             
+            item.slot.decor.visible = !item.slot.decor.visible;
+
+            if (item.slot.decor.visible) {
+              if (this.activeItem) {
+                this.activeItem.rangeObject.visible = false;
+                this.activeItem.slot.decor.visible = false;
+              }
+              
+              item.slot.tint = 0x304876;
+              this.activeItem = item;
+              this.actor.weapon = item;
+              this.actor.weapon.rangeObject.visible = true;
+            } else {
+              this.activeItem = undefined;
+
+              this.actor.weapon.rangeObject.visible = false;
+              this.actor.weapon = undefined;
             }
           }
         }, this);

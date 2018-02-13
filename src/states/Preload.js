@@ -5,6 +5,7 @@ class Preload extends Phaser.State {
     this.game.load.spritesheet("timer", 'assets/interface/timer.png', 66, 10);
     this.game.load.spritesheet("timer_bg", 'assets/interface/timer_bg.png', 66, 10);
     this.game.load.atlas("inventory", 'assets/interface/invent.png', 'assets/interface/invent.json', Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
+    this.game.load.image("ic_hand", "assets/interface/icons/ic_hand.png");
   }
 
   loadWeapons() {

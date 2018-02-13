@@ -1,37 +1,70 @@
 import Player from '../components/Player';
+import Enemy from '../components/Enemy';
 import Helpers from '../Helpers';
 
 class ActorsManager {
   constructor(client) {
-	  this.client = client;
+    this.client = client;
+    this.localID = 0;
+    this.list = [
+      {id: 1, damage: 10, title: "Orc", isPlayer: false}
+    ]
   }
 
   init() {
-	  this.client.actorsList = [];
-	  this.client.actorsMap = {};
-	  let actor, x, y;
-    
-    let validpos = [];
-		for (x = 0; x < this.client.mapsManager.cols; x++) {
-			for (y = 0; y < this.client.mapsManager.rows; y++) {
+    this.validpos = [];
+		for (let x = 0; x < this.client.mapsManager.cols; x++) {
+			for (let y = 0; y < this.client.mapsManager.rows; y++) {
 				if (!this.client.mapsManager.map.tiles[x][y]) {
-					validpos.push({x: x, y: y});
+					this.validpos.push({x: x, y: y});
 				}
 			}
     }
-    
-    for (let e = 0; e < 1; e++) {
-			do {
-				let r = validpos[Helpers.random(validpos.length)];
-				x = r.x;
-				y = r.y;
-			} while (this.client.actorsMap[x + '_' + y]);
+  }
 
-			actor = new Player(this.client, x, y);
+  create(id, pos) {
+    let a, data, actor;
 
-			this.client.actorsMap[actor.sprite.x + '_' + actor.sprite.y] = actor;
-			this.client.actorsList.push(actor);
-		}
+    if (id == 0) {
+      a = {isPlayer: true};
+    } else {
+      a = this.list.find(function(el) {
+        if (el[0] == id || el.id == id) {
+          return true;
+        }
+        return false;
+      })
+    }
+
+    if (a) {
+      data = a;
+      
+      let r;
+      if (!pos) {
+        while (this.validpos.length != this.client.actorsList.length && !pos) {
+          r = this.validpos[Helpers.random(this.validpos.length)];
+          if (!this.client.actorsMap.hasOwnProperty(r.x + "." + r.y)) {
+            pos = r // this.client.posToCoord(r);
+          }
+        }
+      } else {
+        r = pos;
+      }
+
+      if (!pos) { return };
+      
+      if (data.isPlayer) {
+        actor = new Player(this.client, data, pos);
+      } else {
+        actor = new Enemy(this.client, data, pos);
+      }
+      
+      this.localID++;
+      this.client.actorsList.push(actor);
+      this.client.actorsMap[r.x + "." + r.y] = actor;
+    }
+
+    return actor;
   }
 }
 

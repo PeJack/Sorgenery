@@ -96,6 +96,7 @@ class InputHandler {
   }
 
   attack() {
+    if (!this.client.player.weapon) { return };
     this.client.player.weapon.attack(this.client.game.input.activePointer);
   }
 

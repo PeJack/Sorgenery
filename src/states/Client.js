@@ -4,7 +4,6 @@ import MapsManager from 'systems/MapsManager';
 import ActorsManager from 'systems/ActorsManager';
 import EffectsManager from 'systems/EffectsManager';
 import ItemsManager from 'systems/ItemsManager';
-import WeaponsManager from 'systems/WeaponsManager';
 import Inventory from '../components/Inventory';
 import Helpers from 'Helpers';
 
@@ -30,7 +29,6 @@ class Client extends Phaser.State {
   create() {
     this.mapsManager     = new MapsManager(this);
     this.actorsManager   = new ActorsManager(this);
-    this.weaponsManager  = new WeaponsManager(this);
     this.itemsManager    = new ItemsManager(this);
     this.buttonHandler   = this.game.buttonHandler;
     this.inputHandler    = new InputHandler(this);
@@ -47,12 +45,6 @@ class Client extends Phaser.State {
     this.actorsManager.init();
     this.itemsManager.init();
 
-    this.player = this.actorsList[0];
-    this.inventory = new Inventory(this, this.player);
-    this.player.inventory = this.inventory;
-
-    this.game.camera.follow(this.player.sprite);
-    
     this.run();
   }
 
@@ -62,6 +54,20 @@ class Client extends Phaser.State {
     for (let i = 0; i < 50; i++) {
       this.itemsManager.create(Helpers.random(201, 212));
     }
+
+    this.player = this.actorsManager.create(0);
+
+    for (let i = 1; i < 1000; i++) {
+      let pos = {
+        x: this.player.position.x,
+        y: this.player.position.y - 6
+      }
+      this.actorsManager.create(Helpers.random(1, 2));
+    }
+
+    this.inventory = new Inventory(this, this.player);
+    this.player.inventory = this.inventory;
+    this.game.camera.follow(this.player.sprite);
 
     this.mapsManager.map.light();
   }
@@ -81,10 +87,16 @@ class Client extends Phaser.State {
         } 
       }, this)
 
+      this.actorsList.forEach(function(actor) {
+        if (actor.constructor.name == "Enemy") {
+          actor.aiAct();
+        }
+      })
+
       this.player.inventory.update();
     }
     
-    if (!this.player.weapon.visualTimer.hasFinished) {
+    if (this.player.weapon) {
       this.player.weapon.update();
     }
   }
@@ -116,10 +128,16 @@ class Client extends Phaser.State {
     this.game.debug.text(this.game.time.fps || '--', 2, 14, "#a7aebe");
     // this.game.debug.spriteBounds(this.inventory.background);
     this.game.debug.text(("x: " + this.player.position.x + " y: " + this.player.position.y) || '--', 2, 32, "#a7aebe");
-    this.game.debug.text(this.inventory.background.x + " " + this.inventory.background.y || '--', 2, 50, "#a7aebe");    
-    this.inventory.items.forEach(function(slot, index) {
-      this.game.debug.text("x:" + slot.x +  " y:" + slot.y, 2, 50 + (index + 1) * 15, "#a7aebe");
-    }, this)
+    
+    // this.game.debug.text( this.actorsList[1].alertedTimer.seconds || '--', 2, 50, "#a7aebe"); 
+    let i = 0;
+    for (let key in this.actorsMap) {
+      this.game.debug.text("index: " + i + " pos: " + key +  "  isPlayer: " + this.actorsMap[key].isPlayer, 2, 32 + (i + 1) * 15, "#a7aebe");   
+      i++;   
+    }
+    // this.actorsMap.forEach(function(key, value) {
+    //   this.game.debug.text("key:" + key +  " value:" + slot.y, 2, 32 + (index + 1) * 15, "#a7aebe");
+    // }, this)
   }
 }
 

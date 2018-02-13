@@ -18,7 +18,7 @@ class ItemsManager {
     }
   }
 
-  create(id, actor, pos) {
+  create(id, pos, actor) {
     let i, data, item;
 
     i = this.list.find(function(el) {
@@ -45,7 +45,7 @@ class ItemsManager {
 
       if (!pos) { return };
       
-      item = new Item(this.client, data, pos.x, pos.y);
+      item = new Item(this.client, data, pos, actor);
       item.lastPos = {
         x: r.x, y: r.y
       };
